@@ -1,5 +1,7 @@
 package shapes;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -18,6 +20,9 @@ abstract public class TShape implements Serializable {
 	protected Shape shape;
 	private AffineTransform affineTransform;
 	private TAnchors anchors;
+	private Color color;
+	private double thickness;
+	private String text;
 	
 	// setters and getters
 	public Shape getShape() {return this.shape;}
@@ -27,6 +32,10 @@ abstract public class TShape implements Serializable {
 	public boolean isSelected() {return this.bSelected;}
 	public void setSelected(boolean bSelected) {this.bSelected = bSelected;}
 	public EAnchors getSelectedAnchor() {return this.anchors.geteSelectedAnchor();}
+	public Color getColor() {return color;}
+	public void setColor(Color color) {this.color = color;}
+	public double getThickness() {return this.thickness;}
+	public void setThickness(double thickness) {this.thickness = thickness;}
 	
 	// constructor
 	public TShape() {
@@ -34,6 +43,7 @@ abstract public class TShape implements Serializable {
 		this.affineTransform.setToIdentity();
 		this.anchors = new TAnchors();
 		this.bSelected = false;
+		this.color = Color.BLACK;
 	}
 	
 	public abstract TShape clone();
@@ -50,7 +60,7 @@ abstract public class TShape implements Serializable {
 			};
 		}
 		Shape transformedShape = this.affineTransform.createTransformedShape(this.shape);
-		if(transformedShape.contains(x, y)) {
+		if(transformedShape.getBounds().contains(x, y)) {
 			this.anchors.setSelectedAnchor(EAnchors.eMove);
 			return true;
 		}
@@ -58,15 +68,24 @@ abstract public class TShape implements Serializable {
 	}	
 	public void draw(Graphics2D graphics2D) {
 		Shape transformedShape = this.affineTransform.createTransformedShape(this.shape);
+		graphics2D.setStroke(new BasicStroke((float) this.getThickness()));
+		graphics2D.setColor(this.getColor());
 		graphics2D.draw(transformedShape);
+		graphics2D.setColor(Color.BLACK);
+		graphics2D.setStroke(new BasicStroke(1));
 		if (isSelected()) {
-			this.anchors.draw(graphics2D, transformedShape.getBounds());
+			this.anchors.draw(graphics2D, this.shape.getBounds(), this.affineTransform);
 		}
 	}
 	
 	public abstract void prepareDrawing(int x, int y);
 	public abstract void keepDrawing(int x, int y);
 	public void addPoint(int x, int y) {}
+	public void clearAnchor(Graphics2D graphics2D) {
+		if (isSelected()) {
+			this.anchors.clearAnchor(graphics2D, this.shape.getBounds(), this.affineTransform);
+		}
+	}
 
 }
 

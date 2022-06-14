@@ -13,7 +13,7 @@ public class MenuBar extends JMenuBar {
 	private DrawingPanel drawingPanel;
 	
 	public MenuBar() {
-		this.fileMenu = new FileMenu("file");
+		this.fileMenu = new FileMenu("파일");
 		this.add(this.fileMenu);
 		
 		this.editMenu = new EditMenu("편집");
@@ -30,5 +30,9 @@ public class MenuBar extends JMenuBar {
 	public void initialize() {
 		this.fileMenu.initialize();
 		this.editMenu.initialize();
+	}
+
+	public void windowClosing() {
+		this.fileMenu.windowClosing();
 	}
 }

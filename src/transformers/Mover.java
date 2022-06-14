@@ -1,5 +1,7 @@
 package transformers;
 
+import java.awt.Shape;
+
 import shapes.TShape;
 
 public class Mover extends Transformer {
@@ -23,7 +25,9 @@ public class Mover extends Transformer {
 	
 	@Override
 	public void finalize(int x, int y) {
-		
+		Shape shape = this.affineTransform.createTransformedShape(this.shape.getShape());
+		this.shape.setShape(shape);
+		this.affineTransform.setToIdentity();
 	}
 		
 }

@@ -1,14 +1,20 @@
 package shapes;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.RectangularShape;
+import java.io.Serializable;
 
 import shapes.TAnchors.EAnchors;
 
-public class TAnchors {
+public class TAnchors implements Serializable{
 
 	private final int WIDTH = 15;
 	private final int HEIGHT = 15;
@@ -61,7 +67,7 @@ public class TAnchors {
 		return false;
 	}
 	
-	public void draw(Graphics2D graphics2D, Rectangle boundingRectangle) {
+	public void draw(Graphics2D graphics2D, Rectangle boundingRectangle, AffineTransform affineTransform) {
 		
 		for (int i=0; i<EAnchors.values().length-1; i++) {
 			EAnchors eAnchor = EAnchors.values()[i];
@@ -86,7 +92,11 @@ public class TAnchors {
 			y = y - HEIGHT/2;
 			
 			this.anchors[eAnchor.ordinal()].setFrame(x, y, WIDTH, HEIGHT);
-			graphics2D.draw(this.anchors[eAnchor.ordinal()]);
+			Shape transformedShape = affineTransform.createTransformedShape(this.anchors[eAnchor.ordinal()]);
+			graphics2D.setColor(Color.WHITE);
+			graphics2D.fill(transformedShape);
+			graphics2D.setColor(Color.BLACK);
+			graphics2D.draw(transformedShape);
 		}
 	}
 	public Point2D getResizeAnchorPoint() {
@@ -105,6 +115,18 @@ public class TAnchors {
 		double cx = this.anchors[eResizeAnchor.ordinal()].getCenterX();
 		double cy = this.anchors[eResizeAnchor.ordinal()].getCenterY();
 		return new Point2D.Double(cx, cy);
+	}
+	public void clearAnchor(Graphics2D graphics2D, Rectangle boundingRectangle, AffineTransform affineTransform) {
+		for (int i=0; i<this.anchors.length; i++) {
+			int x = (int) this.anchors[i].getX();
+			int y = (int) this.anchors[i].getY();
+			int w = (int) this.anchors[i].getWidth();
+			int h = (int) this.anchors[i].getHeight();
+			graphics2D.clearRect(x, y, w, h);
+			graphics2D.setXORMode(Color.WHITE);
+			graphics2D.setColor(Color.WHITE);
+			graphics2D.fill(this.anchors[i]);
+		}
 	}
 
 }

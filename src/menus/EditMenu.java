@@ -1,6 +1,12 @@
 package menus;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+
+import global.Constants.EEditMenu;
+import menus.EditMenu.ActionHandler;
 
 public class EditMenu extends JMenu {
 	private static final long serialVersionUID = 1L;
@@ -18,22 +24,33 @@ public class EditMenu extends JMenu {
 	public EditMenu(String title) {
 		super(title);
 		
-		this.undoItem = new JMenuItem("undo");
-		this.add(this.undoItem);		
-		this.redoItem = new JMenuItem("redo");
-		this.add(this.redoItem);
+		ActionHandler actionHandler = new ActionHandler();
+		for (EEditMenu eMenuItem: EEditMenu.values()) {
+			JMenuItem menuItem = new JMenuItem(eMenuItem.getLabel());
+			menuItem.setActionCommand(eMenuItem.name());
+			menuItem.addActionListener(actionHandler);
+			this.add(menuItem);
+		}
 		
-		this.cutItem = new JMenuItem("cut");
-		this.add(this.cutItem);		
-		this.copyItem = new JMenuItem("copy");
-		this.add(this.copyItem);		
-		this.pasteItem = new JMenuItem("paste");
-		this.add(this.pasteItem);
+	}
+	
+	class ActionHandler implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getActionCommand().equals(EEditMenu.eCut.name())) {
+				
+			} else if (e.getActionCommand().equals(EEditMenu.eCopy.name())) {
+				
+			} else if (e.getActionCommand().equals(EEditMenu.ePaste.name())) {
+				
+			} else if (e.getActionCommand().equals(EEditMenu.eUndo.name())) {
+				
+			} else if (e.getActionCommand().equals(EEditMenu.eRedo.name())) {
+				
+			}
+		}
 		
-		this.groupItem = new JMenuItem("group");
-		this.add(this.groupItem);		
-		this.unGroupItem = new JMenuItem("ungroup");
-		this.add(this.unGroupItem);
 	}
 
 	public void initialize() {

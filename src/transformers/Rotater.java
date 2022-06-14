@@ -1,6 +1,7 @@
 package transformers;
 
 import java.awt.Graphics2D;
+import java.awt.Shape;
 
 import shapes.TShape;
 
@@ -33,7 +34,9 @@ public class Rotater extends Transformer {
 	
 	@Override
 	public void finalize(int x, int y) {
-		
+		Shape shape = this.affineTransform.createTransformedShape(this.shape.getShape());
+		this.shape.setShape(shape);
+		this.affineTransform.setToIdentity();
 	}
 		
 }
